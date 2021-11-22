@@ -21,7 +21,7 @@ book_price int,
     insert into book_detail value (6, 'hirarchy', 'bhagat', 500, '2006' ,' Y1');
     insert into book_detail value (7, 'wings fire', 'abdul kalam', 500, '2005' ,' Y3');
     insert into book_detail value (8, 'jcr', 'Bagalur Swamy', 795, '2005' ,'Y1');
-   insert into book_detail value  (9, 'computer network', 'ramana', 1000, '2009' ,' Y1');
+    insert into book_detail value  (9, 'computer network', 'ramana', 1000, '2009' ,' Y1');
     insert into book_detail value (10, 'the fault star', 'jhon green', 1300, '2012' ,' Y2');
     
     select  * from book_detail;
@@ -33,7 +33,7 @@ book_price int,
 ALTER TABLE Book_Details ADD COLUMN No_Of_Pages INT;
 ALTER TABLE Book_Details DROP COLUMN No_Of_Pages;
 ALTER TABLE Book_Details ADD COLUMN No_Of_Pages INT AFTER Book_Name;
-ALTER TABLE Book_Details rename column Book_Price book_amount ;
+ALTER TABLE Book_Details change  Book_Price book_amount int ;
 SHOW TABLES;
 DESCRIBE book_details;
 SELECT DISTINCT Book_Author FROM book_details;
@@ -330,7 +330,7 @@ insert into customer value (11, 'sunita', 9387234511 ,'meghanqa@gmail.com', 'sag
 (08, 'kavya', 9087234511 ,'kavya@gmail.com', 'mysore'),(09, 'darshaN', 8887234511 ,'DARSHAN@gmail.com', 'dharwad'),
 (010, 'akshata', 9787234515 ,'akshata@gmail.com', 'bijapur');
 
-
+create database orders1;
    create table orders(
    order_id int,
    product_name varchar(40) not null,
@@ -340,6 +340,7 @@ insert into customer value (11, 'sunita', 9387234511 ,'meghanqa@gmail.com', 'sag
    primary key (order_id),
    foreign key(cust_ref) references customer(cust_id));
    
+   use orders1;
    
 insert into orders value( 100, 'iphone' , 60000.00, '2021-11-16', 1 );
    
@@ -377,13 +378,53 @@ SELECT * FROM customer C INNER JOIN orders O ON O.cust_ref = C.cust_id;
 
     SELECT * FROM customer C RIGHT JOIN orders O ON O.cust_ref = C.cust_id;
     
+-- full jion: using union all or union we cant use full jion keyword-- combination of left and right jion
+
+SELECT * FROM customer C LEFT JOIN orders O ON O.cust_ref = C.cust_id
+
+union all
+
+SELECT * FROM customer C RIGHT JOIN orders O ON O.cust_ref = C.cust_id;
     
-    
-    
+-- cross jion
+
+create database offers;
+
+use offers;
+
+create table offer(
+offer_id int ,
+offer_name varchar (40),
+offer_perchantage decimal check(offer_perchantage<50),
+offer_ratings int,
+order_ref int ,
+primary key (offer_id),
+foreign key(order_ref) references orders (order_id));
+  
+insert into offer value(1, 'end_of_yearSALE' , 35.50 , 4 , 3);
+
+select * from offer;
+
+select * from orders cross join offer;
+
+-- view __ its a virtual table---- not original
+
+create view sunita_customer as select * from customer where cust_name like 'sunita%' ;
          
+ select * from  sunita_customer;  
+  
+  select * from  sunita_customer where cust_addr = 'sagara' ;  
+  
+  alter view sunita_customer as select * from customer where cust_addr = 'gadagron' ;
          
-         
-    
-    
+  create view   offer_given as select * from orders cross join offer;
+  
+  select * from  offer_given;  
+  
+   select * from  offer_given where order_amount>60000; 
+   
+   drop view offer_given;  
+  
+  
     
     
